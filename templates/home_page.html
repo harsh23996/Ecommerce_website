@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EcommerceShop</title>
+</head>
+<body>  
+
+    <!-- 🔹 Navbar -->
+    <nav>
+        <h2>EcommerceShop</h2>
+        <a href="{% url 'home_page' %}">Home</a>
+        <a href="{%url 'products_page'%}">Categories</a>
+        <a href="{% url 'products_page' %}">Products</a>
+        <form method="GET" action="{% url 'home_search' %}">
+            <input type="text" name="q" placeholder="Search products...">
+            <button type="submit">Search</button>
+        </form>
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+    </nav>
+
+    <!-- 🔹 Hero Section -->
+    <section>
+        <h1>Welcome {{user.username}} to our EcommerceShop</h1>
+        <p>Discover premium quality products with exceptional value and outstanding customer service</p>
+        <a href="#categories"><button>Shop Now</button></a>
+        <a href="#featured"><button>Featured Products</button></a>
+    </section>
+        
+    <!-- 🔹 Category Section -->
+    <section id="categories">
+        <h2>Shop by Category</h2>
+        <p>Explore our wide range of product categories</p>
+        {% for cat in categories %}
+            <div style="border:1px solid black; margin:10px; padding:10px; display:inline-block;">
+            <a href= "{% url 'product_by_category' cat.id%}"><button><p><strong>{{ cat.name }}</strong></p></button>
+            </div>
+        {% endfor %}
+    </section>
+
+    <!-- 🔹 Featured Products -->
+    <section id="featured">
+        <h2>Featured Products</h2>
+        <p>Hand-picked products just for you</p>
+        {% for prod in products %}
+            <div style="border:1px solid gray; padding:10px; margin:10px;">
+                <h3>{{ prod.name }}</h3>
+                <p>Category: {{ prod.Categories.name }}</p>
+                <p>Price: ₹{{ prod.price }}</p>
+                <p>Description: {{ prod.description }}</p>
+                {% if prod.Product_image %}
+                    <img src="{{ prod.Product_image.url }}" alt="Product Image" width="150">
+                {% else %}      
+                    <p>No image</p>
+                {% endif %}
+
+                <!-- ✅ Add to Cart from home (redirects to products page) -->
+                <form method="POST" action="{% url 'add_to_cart_from_home' prod.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Add to Cart</button>
+                </form>
+            </div>
+        {% endfor %}
+    </section>
+
+    <!-- 🔹 Add Product (for authenticated users) -->
+    {% if user.is_authenticated %}
+        <div style="margin-top: 30px;">
+            <a href="{% url 'add_product' %}"><button>Add a New Product</button></a>
+        </div>
+    {% endif %}
+
+    <!-- 🔹 Footer -->
+    <footer>
+        <p>&copy; 2023 EcommerceShop. All rights reserved.</p>
+        <p>Follow us on:
+            <a href="#">Facebook</a>,
+            <a href="#">Twitter</a>,
+            <a href="#">Instagram</a>
+        </p>
+    </footer>
+</body>
+</html>
