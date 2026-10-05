@@ -82,7 +82,7 @@ DATABASES = {
     'default': {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "ecommerse_website_db",
-        "USER": "root",
+        "USER": "django_user",
         "PASSWORD": "pass123",
         "HOST": "127.0.0.1",
         "PORT": "3306",
